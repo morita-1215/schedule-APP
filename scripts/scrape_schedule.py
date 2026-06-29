@@ -93,16 +93,16 @@ def scrape_equallove(today):
 
 
 GROUPS = [
-    ("乃木坂46", scrape_nogizaka),
-    ("櫻坂46", scrape_sakurazaka),
-    ("=LOVE", scrape_equallove),
+    ("乃木坂46", "◢", scrape_nogizaka),
+    ("櫻坂46", "🌸", scrape_sakurazaka),
+    ("=LOVE", "♥", scrape_equallove),
 ]
 
 
 def build_body(today):
     lines = [f"{today.strftime('%Y年%m月%d日')} のスケジュール", ""]
-    for name, scraper in GROUPS:
-        lines.append(f"■ {name}")
+    for name, emoji, scraper in GROUPS:
+        lines.append(f"{emoji}{name}")
         try:
             events = scraper(today)
         except Exception as exc:  # noqa: BLE001
