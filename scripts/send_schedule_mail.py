@@ -23,14 +23,20 @@ def send_mail(subject, body):
 
     context = ssl.create_default_context()
     if port == 465:
-        with smtplib.SMTP_SSL(host, port, context=context, timeout=30) as server:
-            server.login(user, password)
-            server.sendmail(mail_from, [mail_to], msg.as_string())
+        server = smtplib.SMTP_SSL(host, port, context=context, timeout=30)
     else:
-        with smtplib.SMTP(host, port, timeout=30) as server:
-            server.starttls(context=context)
-            server.login(user, password)
-            server.sendmail(mail_from, [mail_to], msg.as_string())
+        server = smtplib.SMTP(host, port, timeout=30)
+        server.starttls(context=context)
+
+    server.set_debuglevel(1)
+    server.ehlo()
+    try:
+        server.auth("CRAM-MD5", server.auth_cram_md5)
+    except smtplib.SMTPException:
+        server.login(user, password)
+
+    server.sendmail(mail_from, [mail_to], msg.as_string())
+    server.quit()
 
 
 if __name__ == "__main__":
