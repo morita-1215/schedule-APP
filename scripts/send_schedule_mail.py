@@ -29,12 +29,7 @@ def send_mail(subject, body):
         server.starttls(context=context)
 
     server.set_debuglevel(1)
-    server.ehlo()
-    try:
-        server.auth("CRAM-MD5", server.auth_cram_md5)
-    except smtplib.SMTPException:
-        server.login(user, password)
-
+    server.login(user, password)
     server.sendmail(mail_from, [mail_to], msg.as_string())
     server.quit()
 
